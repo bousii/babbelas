@@ -53,29 +53,29 @@ func isSkippable(value string) bool {
 func tokenize(source string) ([]Token, error) {
 	var tokens []Token
 	src := strings.Split(source, "")
-	for len(src) > 0 {
-		if src[0] == "(" {
-			tokens = append(tokens, Token{src[0], LeftParen})
-		} else if src[0] == ")" {
-			tokens = append(tokens, Token{src[0], RightParen})
-		} else if src[0] == "+" || src[0] == "-" || src[0] == "*" || src[0] == "/" {
-			tokens = append(tokens, Token{src[0], BinaryOp})
-		} else if src[0] == "=" {
-			tokens = append(tokens, Token{src[0], Equals})
+	for i := 0; i < len(src); i++ {
+		if src[i] == "(" {
+			tokens = append(tokens, Token{src[i], LeftParen})
+		} else if src[i] == ")" {
+			tokens = append(tokens, Token{src[i], RightParen})
+		} else if src[i] == "+" || src[i] == "-" || src[i] == "*" || src[i] == "/" {
+			tokens = append(tokens, Token{src[i], BinaryOp})
+		} else if src[i] == "=" {
+			tokens = append(tokens, Token{src[i], Equals})
 		} else {
-			//For multicharacter tokens, INDEX OUT OF BOUNDS FOR CASE "400"
-			if isNum(src[0]) {
+			//For multicharacter tokens,
+			if isNum(src[i]) {
 				num := ""
-				for len(src) > 0 && isNum(src[0]) {
-					num += src[0]
-					src = src[1:]
+				for i < len(src) && isNum(src[i]) {
+					num += src[i]
+					i++
 				}
 				tokens = append(tokens, Token{num, Number})
-			} else if isAlpha(src[0]) {
+			} else if isAlpha(src[i]) {
 				ident := ""
-				for len(src) > 0 && isAlpha(src[0]) {
-					ident += src[0]
-					src = src[1:]
+				for i < len(src) && isAlpha(src[i]) {
+					ident += src[i]
+					i++
 				}
 
 				//reserved keywords
@@ -85,21 +85,20 @@ func tokenize(source string) ([]Token, error) {
 				} else {
 					tokens = append(tokens, Token{ident, Keywords[ident]})
 				}
-			} else if isSkippable(src[0]) {
-				src = src[1:]
+			} else if isSkippable(src[i]) {
+				continue
 			} else {
-				return nil, fmt.Errorf("Unknown character found: %s", src[0])
+				return nil, fmt.Errorf("Unknown character found: %s", src[i])
 			}
 		}
 
-		src = src[1:] //deleting first index, moving forward
 	}
 
 	return tokens, nil
 }
 
 func main() {
-	tokens, err := tokenize("400")
+	tokens, err := tokenize("Bou min = 50")
 	if err != nil {
 		fmt.Println(err)
 		return
