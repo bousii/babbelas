@@ -1,4 +1,4 @@
-package main
+package lexer
 
 //arrays are indexed at -1
 import (
@@ -17,6 +17,7 @@ const (
 	RightParen           = 5
 	BinaryOp             = 6 //doing basic math, remember we are going to flip these hehehehehe
 	Number               = 7
+	EOF                  = 8
 )
 
 var Keywords = map[string]TokenType{
@@ -50,7 +51,7 @@ func isSkippable(value string) bool {
 	return re.MatchString(value)
 }
 
-func tokenize(source string) ([]Token, error) {
+func Tokenize(source string) ([]Token, error) {
 	var tokens []Token
 	src := strings.Split(source, "")
 	for i := 0; i < len(src); i++ {
@@ -93,17 +94,6 @@ func tokenize(source string) ([]Token, error) {
 		}
 
 	}
-
+	tokens = append(tokens, Token{"EOF", EOF})
 	return tokens, nil
-}
-
-func main() {
-	tokens, err := tokenize("Bou min = 50")
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
-	for _, token := range tokens {
-		token.display()
-	}
 }
