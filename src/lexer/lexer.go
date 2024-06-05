@@ -1,6 +1,5 @@
 package lexer
 
-//arrays are indexed at -1
 import (
 	"fmt"
 	"regexp"
@@ -26,11 +25,11 @@ var Keywords = map[string]TokenType{
 
 type Token struct {
 	Value     string
-	tokentype TokenType
+	Tokentype TokenType
 }
 
 func (t Token) display() {
-	fmt.Printf("{ Value ->  %s, Type -> %d }\n", t.Value, t.tokentype)
+	fmt.Printf("{ Value ->  %s, Type -> %d }\n", t.Value, t.Tokentype)
 }
 
 func isAlpha(value string) bool {

@@ -7,6 +7,7 @@ const (
 	numericLiteral NodeType = "NumericLiteral"
 	identifier     NodeType = "Identifier"
 	binaryExpr     NodeType = "BinaryExpr"
+	expr           NodeType = "Expression"
 )
 
 type Stmt interface {
@@ -14,6 +15,7 @@ type Stmt interface {
 }
 
 type Expr interface {
+	GetKind() NodeType
 }
 
 type Program struct {
@@ -25,7 +27,7 @@ func (p Program) GetKind() NodeType {
 }
 
 type NumericLiteral struct {
-	Value int
+	Value float64
 }
 
 func (n NumericLiteral) GetKind() NodeType {
@@ -33,7 +35,7 @@ func (n NumericLiteral) GetKind() NodeType {
 }
 
 type Identifier struct {
-	symbol string
+	Symbol string
 }
 
 func (i Identifier) GetKind() NodeType {
@@ -41,9 +43,9 @@ func (i Identifier) GetKind() NodeType {
 }
 
 type BinaryExpr struct {
-	left     Expr
-	right    Expr
-	operator string
+	Left     Expr
+	Right    Expr
+	Operator string
 }
 
 func (b BinaryExpr) GetKind() NodeType {
