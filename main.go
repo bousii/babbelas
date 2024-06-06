@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/bousii/babbelas/src/parser"
+	"github.com/bousii/babbelas/parser"
 )
 
 func main() {
@@ -18,9 +18,11 @@ func main() {
 		}
 		program, err := parser.ProduceAST(text)
 		if err != nil {
-			fmt.Printf(err.Error())
+			fmt.Println(err.Error())
 			os.Exit(1)
 		}
-		fmt.Println(program.Body)
+		for _, stmt := range program.Body {
+			fmt.Printf("%s : %v\n", stmt.GetKind(), stmt)
+		}
 	}
 }

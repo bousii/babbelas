@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"strconv"
 
-	"github.com/bousii/babbelas/src/ast"
-	"github.com/bousii/babbelas/src/lexer"
+	"github.com/bousii/babbelas/ast"
+	"github.com/bousii/babbelas/lexer"
 )
 
 type Parser struct {
