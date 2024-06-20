@@ -12,6 +12,9 @@ type Parser struct {
 	tokens []lexer.Token
 }
 
+func (p Parser) at() lexer.Token {
+	return p.tokens[0]
+}
 func (p Parser) ProduceAST(sourceCode string) (ast.Program, error) {
 	tokens, err := lexer.Tokenize(sourceCode)
 	if err != nil {
@@ -23,7 +26,7 @@ func (p Parser) ProduceAST(sourceCode string) (ast.Program, error) {
 		if tokens[i].Tokentype == lexer.EOF {
 			break
 		}
-		stmt, err := parse_Stmt(tokens[i])
+		stmt, err := p.parse_Stmt()
 		if err != nil {
 			return ast.Program{}, err
 		}
@@ -32,31 +35,35 @@ func (p Parser) ProduceAST(sourceCode string) (ast.Program, error) {
 	return program, nil
 }
 
-func parse_Stmt(token lexer.Token) (ast.Stmt, error) {
-	ret_Stmt, err := parse_Expr(token)
+func (p Parser) parse_Stmt() (ast.Stmt, error) {
+	ret_Stmt, err := p.parse_Expr()
 	if err != nil {
 		return nil, err
 	}
 	return ret_Stmt, nil
 }
 
-func parse_Expr(token lexer.Token) (ast.Expr, error) {
-	ret_Expr, err := parse_first_Expr(token)
+func (p Parser) parse_Expr() (ast.Expr, error) {
+	ret_Expr, err := p.parse_primary_Expr()
 	if err != nil {
 		return nil, err
 	}
 	return ret_Expr, nil
 }
 
-func parse_first_Expr(token lexer.Token) (ast.Expr, error) {
-	tokentype := token.Tokentype
+func (p Parser) parse_primary_Expr() (ast.Expr, error) {
+	tokentype := p.at().Tokentype
 	switch tokentype {
 	case lexer.Identifier:
-		return ast.Identifier{Symbol: token.Value}, nil
+		return ast.Identifier{Symbol: p.at().Value}, nil
 	case lexer.Number:
-		num, _ := strconv.ParseFloat(token.Value, 64) // There should never be an error here, if there is, then the lexer is incorrect, I think...
+		num, _ := strconv.ParseFloat(p.at().Value, 64) // There should never be an error here, if there is, then the lexer is incorrect, I think...
 		return ast.NumericLiteral{Value: num}, nil
 	default:
 		return nil, fmt.Errorf("Unidentified token identified in the parser %d", tokentype)
 	}
 }
+
+// func (p Parser) parse_additive_Expr() (ast.Expr, error) {
+// 	left := p.parse_primary_Expr()
+// }
